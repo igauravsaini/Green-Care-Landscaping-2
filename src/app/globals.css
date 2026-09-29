@@ -1,26 +1,309 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ─── Design Tokens ────────────────────────────────────────────────────── */
+@theme {
+  --color-forest: #14301F;
+  --color-forest-light: #1a3d28;
+  --color-moss: #4C6B3A;
+  --color-moss-light: #5d7f47;
+  --color-cream: #F6F1E7;
+  --color-cream-dark: #E8E0D0;
+  --color-charcoal: #1B1B1B;
+  --color-brass: #B98B3E;
+  --color-brass-light: #D4A54A;
+  --color-brass-dark: #9A7233;
+  --color-white: #FFFFFF;
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+
+  --font-serif: "Cormorant Garamond", "Georgia", serif;
+  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ─── Base Styles ──────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-charcoal);
+    background-color: var(--color-cream);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--color-forest);
+  }
+
+  h1 { font-size: clamp(2.5rem, 5vw + 1rem, 4.5rem); }
+  h2 { font-size: clamp(2rem, 4vw + 0.5rem, 3.5rem); }
+  h3 { font-size: clamp(1.5rem, 2.5vw + 0.5rem, 2.25rem); }
+  h4 { font-size: clamp(1.25rem, 2vw + 0.25rem, 1.75rem); }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Focus states for accessibility */
+  :focus-visible {
+    outline: 3px solid var(--color-brass);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background-color: var(--color-moss);
+    color: var(--color-cream);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─── Utility Classes ──────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .gradient-forest {
+    background: linear-gradient(135deg, var(--color-forest) 0%, var(--color-moss) 100%);
+  }
+
+  .gradient-brass {
+    background: linear-gradient(135deg, var(--color-brass) 0%, var(--color-brass-light) 100%);
+  }
+
+  .glass {
+    background: rgba(246, 241, 231, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(246, 241, 231, 0.3);
+  }
+
+  .glass-dark {
+    background: rgba(20, 48, 31, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(76, 107, 58, 0.2);
+  }
+}
+
+/* ─── Component Styles ─────────────────────────────────────────────────── */
+@layer components {
+  /* Primary CTA Button — Brass/Gold */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: linear-gradient(135deg, var(--color-brass) 0%, var(--color-brass-light) 100%);
+    color: var(--color-white);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    letter-spacing: 0.025em;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(185, 139, 62, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--color-brass-light) 0%, var(--color-brass) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(185, 139, 62, 0.4);
+  }
+
+  .btn-primary:hover::before {
+    opacity: 1;
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  .btn-primary > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Secondary CTA Button — Outline */
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: transparent;
+    color: var(--color-forest);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    letter-spacing: 0.025em;
+    border-radius: 0.5rem;
+    border: 2px solid var(--color-forest);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-secondary:hover {
+    background: var(--color-forest);
+    color: var(--color-cream);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(20, 48, 31, 0.3);
+  }
+
+  .btn-secondary:active {
+    transform: translateY(0);
+  }
+
+  /* Light variant for dark backgrounds */
+  .btn-secondary-light {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: transparent;
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    letter-spacing: 0.025em;
+    border-radius: 0.5rem;
+    border: 2px solid rgba(246, 241, 231, 0.6);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-secondary-light:hover {
+    background: var(--color-cream);
+    color: var(--color-forest);
+    border-color: var(--color-cream);
+    transform: translateY(-2px);
+  }
+
+  /* Phone Chip */
+  .phone-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(246, 241, 231, 0.15);
+    border: 1px solid rgba(246, 241, 231, 0.25);
+    border-radius: 100px;
+    color: var(--color-cream);
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .phone-chip:hover {
+    background: rgba(246, 241, 231, 0.25);
+    transform: translateY(-1px);
+  }
+
+  /* Section padding */
+  .section-padding {
+    padding: 6rem 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .section-padding {
+      padding: 8rem 2rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .section-padding {
+      padding: 10rem 4rem;
+    }
+  }
+
+  /* Container */
+  .container-wide {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+
+  .container-narrow {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+}
+
+/* ─── Scrollbar Styling ────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-moss);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-forest);
 }

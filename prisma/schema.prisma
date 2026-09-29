@@ -1,0 +1,102 @@
+// This is your Prisma schema file for Green Care Landscaping.
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BookingPath {
+  maintenance
+  hardscaping
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  completed
+  cancelled
+}
+
+enum PropertyType {
+  house
+  rowhouse
+  commercial
+}
+
+enum YardSize {
+  small
+  medium
+  large
+  not_sure
+}
+
+enum ContactMethod {
+  call
+  text
+  email
+}
+
+model Booking {
+  id               String         @id @default(cuid())
+  bookingNumber    String         @unique // e.g. GC-2026-1042
+  path             BookingPath
+  status           BookingStatus  @default(pending)
+  
+  // Services
+  selectedServices String[]       // array of service slugs
+  
+  // Property details
+  propertyType     PropertyType?
+  yardSize         YardSize?
+  address          String?
+  city             String         @default("Washington")
+  state            String         @default("DC")
+  zipCode          String?
+  
+  // Appointment schedule
+  scheduledDate    DateTime
+  scheduledTime    String         // e.g. "9:00 AM"
+  
+  // Customer details
+  name             String
+  phone            String
+  email            String
+  preferredContact ContactMethod  @default(call)
+  smsConsent       Boolean        @default(false)
+  notes            String?        @db.Text
+  
+  // Hardscaping specific
+  projectType      String?
+  budgetRange      String?
+  timeline         String?
+  hasBlueprints    Boolean        @default(false)
+  projectDetails   String?        @db.Text
+  
+  // Integrations & metadata
+  calendarEventId  String?
+  emailSentAt      DateTime?
+  smsSentAt        DateTime?
+  
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([scheduledDate])
+  @@index([status])
+  @@index([email])
+  @@index([phone])
+}
+
+model ContactInquiry {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String
+  service   String?
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+}
